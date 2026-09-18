@@ -5,22 +5,56 @@ let targetY = window.innerHeight / 2;
 let currentX = targetX;
 let currentY = targetY;
 
+let isSnapped = false;
+let activeTarget = null;
+
 const radius = 250;
-const ease = 0.055;
+const ease = 0.065;
+
+function updateSnapPosition(el) {
+  const rect = el.getBoundingClientRect();
+  targetX = rect.left + rect.width / 2;
+  targetY = rect.top + rect.height / 2;
+}
+
+const targets = document.querySelectorAll('.title, .subtitle, .icon-btn');
+
+targets.forEach((el) => {
+  el.addEventListener('mouseenter', () => {
+    isSnapped = true;
+    activeTarget = el;
+    updateSnapPosition(el);
+  });
+
+  el.addEventListener('mouseleave', (e) => {
+    isSnapped = false;
+    activeTarget = null;
+    targetX = e.clientX;
+    targetY = e.clientY;
+  });
+});
 
 window.addEventListener('mousemove', (e) => {
-  targetX = e.clientX;
-  targetY = e.clientY;
+  if (!isSnapped) {
+    targetX = e.clientX;
+    targetY = e.clientY;
+  }
 });
 
 window.addEventListener('mouseleave', () => {
-  targetX = window.innerWidth / 2;
-  targetY = window.innerHeight / 2;
+  if (!isSnapped) {
+    targetX = window.innerWidth / 2;
+    targetY = window.innerHeight / 2;
+  }
 });
 
 window.addEventListener('resize', () => {
-  targetX = window.innerWidth / 2;
-  targetY = window.innerHeight / 2;
+  if (isSnapped && activeTarget) {
+    updateSnapPosition(activeTarget);
+  } else {
+    targetX = window.innerWidth / 2;
+    targetY = window.innerHeight / 2;
+  }
 });
 
 function animate() {
