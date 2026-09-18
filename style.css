@@ -1,0 +1,115 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: #000000;
+  color: #ffffff;
+  font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+}
+
+.cursor-glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.14) 0%,
+    rgba(255, 255, 255, 0.04) 40%,
+    transparent 70%
+  );
+  filter: blur(45px);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 1;
+  will-change: transform;
+}
+
+.container {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 20px;
+}
+
+.title {
+  font-size: clamp(3rem, 8vw, 5.5rem);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  text-shadow: 0 0 30px rgba(255, 255, 255, 0.35);
+  user-select: none;
+}
+
+.subtitle {
+  margin-top: 14px;
+  font-size: clamp(0.85rem, 2.2vw, 1.1rem);
+  color: #888888;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  font-weight: 500;
+  user-select: none;
+}
+
+.links {
+  margin-top: 40px;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: #d1d1d1;
+  text-decoration: none;
+  transition: all 0.25s ease;
+  cursor: pointer;
+}
+
+.icon-btn svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+
+.icon-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.5);
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 0 16px rgba(255, 255, 255, 0.2);
+}
+
+.icon-btn.placeholder {
+  opacity: 0.3;
+  cursor: not-allowed;
+  border-style: dashed;
+}
+
+.icon-btn.placeholder:hover {
+  transform: none;
+  box-shadow: none;
+  border-color: rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.03);
+  color: #d1d1d1;
+}
