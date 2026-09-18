@@ -1,7 +1,10 @@
 const glow = document.getElementById('glow');
 const subtitle = document.getElementById('main-subtitle');
-const zoneSetup = document.getElementById('zone-setup');
-const panelSetup = document.getElementById('panel-setup');
+const triggers = document.querySelectorAll('.corner-trigger');
+const panels = document.querySelectorAll('.corner-panel');
+
+const viewer = document.getElementById('image-viewer');
+const viewerImg = document.getElementById('image-viewer-img');
 
 const BASE_RADIUS = 200;
 const ease = 0.08;
@@ -18,8 +21,33 @@ let currentScaleY = 1;
 
 let isSnapped = false;
 let activeTarget = null;
+let activeMode = null;
+let leaveTimeout = null;
+let isViewerOpen = false;
 
 function applySnap(el) {
+  if (isViewerOpen) return;
+
+  if (el.classList.contains('corner-trigger') || el.closest('.corner-panel')) {
+    const trigger = el.classList.contains('corner-trigger') ? el : document.querySelector(`.corner-trigger[data-target="${activeMode}"]`);
+    if (trigger.classList.contains('top-left')) {
+      targetX = 100;
+      targetY = 100;
+    } else if (trigger.classList.contains('top-right')) {
+      targetX = window.innerWidth - 100;
+      targetY = 100;
+    } else if (trigger.classList.contains('bottom-left')) {
+      targetX = 100;
+      targetY = window.innerHeight - 100;
+    } else if (trigger.classList.contains('bottom-right')) {
+      targetX = window.innerWidth - 100;
+      targetY = window.innerHeight - 100;
+    }
+    targetScaleX = 2.4;
+    targetScaleY = 2.4;
+    return;
+  }
+
   const rect = el.getBoundingClientRect();
   targetX = rect.left + rect.width / 2;
   targetY = rect.top + rect.height / 2;
@@ -63,6 +91,7 @@ const interactiveTargets = document.querySelectorAll('.title, .subtitle, .icon-b
 
 interactiveTargets.forEach((el) => {
   el.addEventListener('mouseenter', () => {
+    if (isViewerOpen) return;
     isSnapped = true;
     activeTarget = el;
     applySnap(el);
@@ -73,51 +102,96 @@ interactiveTargets.forEach((el) => {
   });
 });
 
-let isInsideZone = false;
-let isInsidePanel = false;
+function activatePanel(trig) {
+  if (isViewerOpen) return;
+  clearTimeout(leaveTimeout);
+  const targetName = trig.dataset.target;
+  const subText = trig.dataset.subtitle;
 
-function handleZoneEnter() {
-  document.body.classList.add('mode-active');
-  switchSubtitle(zoneSetup.dataset.subtitle);
-}
-
-function handleZoneLeaveCheck(e) {
-  if (!isInsideZone && !isInsidePanel) {
-    document.body.classList.remove('mode-active');
-    switchSubtitle(subtitle.dataset.default);
-    resetSnap(e);
+  if (activeMode && activeMode !== targetName) {
+    document.body.classList.remove(`panel-open-${activeMode}`);
   }
+  activeMode = targetName;
+  document.body.classList.add(`panel-open-${targetName}`);
+  switchSubtitle(subText);
+
+  isSnapped = true;
+  activeTarget = trig;
+  applySnap(trig);
 }
 
-zoneSetup.addEventListener('mouseenter', () => {
-  isInsideZone = true;
-  handleZoneEnter();
+function scheduleDeactivate(e) {
+  if (isViewerOpen) return;
+  clearTimeout(leaveTimeout);
+  leaveTimeout = setTimeout(() => {
+    if (activeMode) {
+      document.body.classList.remove(`panel-open-${activeMode}`);
+      activeMode = null;
+      switchSubtitle(subtitle.dataset.default);
+      resetSnap(e);
+    }
+  }, 90);
+}
+
+triggers.forEach((trig) => {
+  trig.addEventListener('mouseenter', () => activatePanel(trig));
+  trig.addEventListener('mouseleave', (e) => scheduleDeactivate(e));
 });
 
-zoneSetup.addEventListener('mouseleave', (e) => {
-  isInsideZone = false;
-  setTimeout(() => handleZoneLeaveCheck(e), 50);
+panels.forEach((panel) => {
+  panel.addEventListener('mouseenter', () => {
+    if (isViewerOpen) return;
+    clearTimeout(leaveTimeout);
+    isSnapped = true;
+    activeTarget = panel;
+    applySnap(panel);
+  });
+  panel.addEventListener('mouseleave', (e) => scheduleDeactivate(e));
 });
 
-panelSetup.addEventListener('mouseenter', () => {
-  isInsidePanel = true;
-  handleZoneEnter();
+function openViewer(src) {
+  isViewerOpen = true;
+  viewerImg.src = src;
+  document.body.classList.add('viewer-open');
+}
+
+function closeViewer() {
+  isViewerOpen = false;
+  document.body.classList.remove('viewer-open');
+  viewerImg.src = '';
+  if (activeMode) {
+    document.body.classList.remove(`panel-open-${activeMode}`);
+    activeMode = null;
+    switchSubtitle(subtitle.dataset.default);
+  }
+  resetSnap();
+}
+
+document.addEventListener('click', (e) => {
+  if (e.target.classList.contains('zoomable-img')) {
+    openViewer(e.target.src);
+    return;
+  }
+  if (isViewerOpen) {
+    closeViewer();
+  }
 });
 
-panelSetup.addEventListener('mouseleave', (e) => {
-  isInsidePanel = false;
-  setTimeout(() => handleZoneLeaveCheck(e), 50);
+window.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && isViewerOpen) {
+    closeViewer();
+  }
 });
 
 window.addEventListener('mousemove', (e) => {
-  if (!isSnapped) {
+  if (!isSnapped && !isViewerOpen) {
     targetX = e.clientX;
     targetY = e.clientY;
   }
 });
 
 window.addEventListener('mouseleave', () => {
-  if (!isSnapped) {
+  if (!isSnapped && !isViewerOpen) {
     targetX = window.innerWidth / 2;
     targetY = window.innerHeight / 2;
     resetSnap();
@@ -125,9 +199,9 @@ window.addEventListener('mouseleave', () => {
 });
 
 window.addEventListener('resize', () => {
-  if (isSnapped && activeTarget) {
+  if (isSnapped && activeTarget && !isViewerOpen) {
     applySnap(activeTarget);
-  } else {
+  } else if (!isViewerOpen) {
     targetX = window.innerWidth / 2;
     targetY = window.innerHeight / 2;
   }

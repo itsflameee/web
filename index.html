@@ -13,30 +13,79 @@
 
   <div class="cursor-glow" id="glow"></div>
 
-  <div class="corner-zone top-left" id="zone-setup" data-subtitle="main setup"></div>
+  <div class="corner-trigger top-left" data-target="setup" data-subtitle="main setup">
+    <span class="trigger-text">main setup</span>
+    <svg class="trigger-icon" viewBox="0 0 24 24">
+      <path d="M7 7l10 10M17 7v10H7"/>
+    </svg>
+  </div>
+
+  <div class="corner-trigger top-right" data-target="placeholder-tr" data-subtitle="placeholder">
+    <span class="trigger-text">placeholder</span>
+    <svg class="trigger-icon" viewBox="0 0 24 24">
+      <path d="M17 7L7 17M7 7v10h10"/>
+    </svg>
+  </div>
+
+  <div class="corner-trigger bottom-left" data-target="placeholder-bl" data-subtitle="placeholder">
+    <span class="trigger-text">placeholder</span>
+    <svg class="trigger-icon" viewBox="0 0 24 24">
+      <path d="M7 17L17 7M17 17V7H7"/>
+    </svg>
+  </div>
+
+  <div class="corner-trigger bottom-right" data-target="placeholder-br" data-subtitle="placeholder">
+    <span class="trigger-text">placeholder</span>
+    <svg class="trigger-icon" viewBox="0 0 24 24">
+      <path d="M17 17L7 7M7 17V7h10"/>
+    </svg>
+  </div>
 
   <aside class="corner-panel top-left" id="panel-setup">
     <h2 class="panel-title">its.flame's Main Setup</h2>
     
     <div class="panel-image-wrap">
-      <img src="fastfetch.png" alt="Fastfetch Setup" class="fastfetch-img" />
+      <img src="https://github.com/itsflameee/itsflameee/blob/main/image.png?raw=true" alt="Fastfetch Setup" class="fastfetch-img zoomable-img" />
     </div>
 
     <p class="panel-desc">
-      Минималистичная рабочая среда, выстроенная под максимальную производительность, кастомизацию и полный контроль над системой.
+      KDE Plasma, monochrome style, Bash &amp; Zsh in Konsole, Arch Linux with systemd. Primary browser: Firefox; secondary: Google Chrome &amp; Ungoogled Chromium.
     </p>
 
     <div class="tech-stack">
       <span class="tech-item" title="Arch Linux">
-        <svg viewBox="0 0 24 24"><path d="M12 2.5c-.7 1.6-1.5 3.3-2.3 5-.5 1-1.2 2.2-1.9 3.6 1-.7 2-1.1 3-1.1 1.7 0 3.1 1.2 3.6 2.8-.7-.4-1.5-.6-2.4-.6-2.1 0-3.8 1.6-4.1 3.7l-4.4 5.6C4.8 21.8 12 2.5 12 2.5zm0 8.4c-1.2 0-2.2 1-2.2 2.2 0 .8.4 1.5 1.1 1.9-.1-.2-.1-.4-.1-.6 0-1.2 1-2.2 2.2-2.2.6 0 1.1.2 1.5.6-.4-1.1-1.4-1.9-2.5-1.9zm4.2 4.6c-.7 0-1.4.3-2 .8.5.2.9.6 1.1 1.1.7-.1 1.4-.4 2-.8-.3-.7-.6-1.1-1.1-1.1zm-8.4.8c-.5.5-.8 1.1-.8 1.8 1.4-.5 2.7-1.2 3.8-2.1-.9.6-1.9.9-3 0.3z"/></svg>
+        <img src="https://github.com/itsflameee/itsflameee/raw/main/arch.png?raw=true" alt="Arch Linux" />
       </span>
+      <span class="tech-dot"></span>
       <span class="tech-item" title="KDE Plasma">
-        <svg viewBox="0 0 24 24"><path d="M4 3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2H4zm3.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3zm7.5 1.5l3.5 3.5-3.5 3.5V13h-4v-2h4V8.5zM6 14h3v3H6v-3z"/></svg>
+        <img src="https://github.com/itsflameee/itsflameee/blob/main/plasma.png?raw=true" alt="KDE Plasma" />
       </span>
+      <span class="tech-dot"></span>
       <span class="tech-item" title="systemd">
-        <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-1 6h2v2h-2V7zm0 4h2v6h-2v-6z"/></svg>
+        <img src="https://github.com/itsflameee/itsflameee/blob/main/systemd.png?raw=true" alt="systemd" />
       </span>
     </div>
+  </aside>
+
+  <aside class="corner-panel top-right" id="panel-placeholder-tr">
+    <h2 class="panel-title">PLACEHOLDER</h2>
+    <p class="panel-desc">
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam.
+    </p>
+  </aside>
+
+  <aside class="corner-panel bottom-left" id="panel-placeholder-bl">
+    <h2 class="panel-title">PLACEHOLDER</h2>
+    <p class="panel-desc">
+      Nulla facilisi. Suspendisse potenti. Vivamus euismod mauris in lacus imperdiet, sit amet tristique massa porta convallis.
+    </p>
+  </aside>
+
+  <aside class="corner-panel bottom-right" id="panel-placeholder-br">
+    <h2 class="panel-title">PLACEHOLDER</h2>
+    <p class="panel-desc">
+      Curabitur sodales ligula in libero. Sed dignissim lacinia nunc. Curabitur tortor pellentesque nibh interdum semper donec.
+    </p>
   </aside>
 
   <main class="container" id="main-container">
@@ -63,6 +112,13 @@
       </div>
     </div>
   </main>
+
+  <div class="image-viewer" id="image-viewer">
+    <div class="image-viewer-content">
+      <img id="image-viewer-img" src="" alt="Expanded View" />
+      <span class="image-viewer-hint">click anywhere to close</span>
+    </div>
+  </div>
 
   <script src="script.js"></script>
 </body>
