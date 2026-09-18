@@ -433,3 +433,20 @@ body.viewer-open .image-viewer-content {
     max-height: 70vh;
   }
 }
+
+.hint-mobile {
+  display: none;
+}
+
+.hint-desktop {
+  display: inline;
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .hint-desktop {
+    display: none;
+  }
+  .hint-mobile {
+    display: inline;
+  }
+}
