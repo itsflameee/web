@@ -52,6 +52,7 @@ body {
   cursor: pointer;
   user-select: none;
   transition: opacity 0.4s ease;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .corner-trigger.top-left { top: 0; left: 0; }
@@ -172,6 +173,7 @@ body.panel-open-placeholder-br #panel-placeholder-br {
 .zoomable-img {
   cursor: zoom-in;
   transition: transform 0.25s ease, filter 0.25s ease;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .zoomable-img:hover {
@@ -294,6 +296,7 @@ body[class*="panel-open-"] .links {
   text-decoration: none;
   transition: all 0.25s ease;
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .icon-btn svg {
@@ -336,6 +339,7 @@ body[class*="panel-open-"] .links {
   pointer-events: none;
   cursor: zoom-out;
   transition: opacity 0.4s ease;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .image-viewer-content {
@@ -387,4 +391,45 @@ body.viewer-open .image-viewer {
 
 body.viewer-open .image-viewer-content {
   transform: scale(1);
+}
+
+@media (max-width: 768px) {
+  .corner-trigger {
+    padding: 18px;
+  }
+
+  .corner-panel {
+    max-width: calc(100vw - 36px);
+  }
+
+  .corner-panel.top-left {
+    top: 56px;
+    left: 18px;
+  }
+
+  .corner-panel.top-right {
+    top: 56px;
+    right: 18px;
+  }
+
+  .corner-panel.bottom-left {
+    bottom: 56px;
+    left: 18px;
+  }
+
+  .corner-panel.bottom-right {
+    bottom: 56px;
+    right: 18px;
+  }
+
+  body[class*="panel-open-"] .container {
+    opacity: 0 !important;
+    pointer-events: none !important;
+    transform: scale(0.75);
+  }
+
+  .image-viewer img {
+    max-width: 90vw;
+    max-height: 70vh;
+  }
 }

@@ -25,6 +25,8 @@ let activeMode = null;
 let leaveTimeout = null;
 let isViewerOpen = false;
 
+const isTouchDevice = () => window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+
 function applySnap(el) {
   if (isViewerOpen) return;
 
@@ -69,7 +71,7 @@ function resetSnap(e) {
   activeTarget = null;
   targetScaleX = 1;
   targetScaleY = 1;
-  if (e) {
+  if (e && e.clientX !== undefined) {
     targetX = e.clientX;
     targetY = e.clientY;
   }
@@ -91,13 +93,14 @@ const interactiveTargets = document.querySelectorAll('.title, .subtitle, .icon-b
 
 interactiveTargets.forEach((el) => {
   el.addEventListener('mouseenter', () => {
-    if (isViewerOpen) return;
+    if (isViewerOpen || isTouchDevice()) return;
     isSnapped = true;
     activeTarget = el;
     applySnap(el);
   });
 
   el.addEventListener('mouseleave', (e) => {
+    if (isTouchDevice()) return;
     resetSnap(e);
   });
 });
@@ -120,33 +123,52 @@ function activatePanel(trig) {
   applySnap(trig);
 }
 
+function closeCurrentPanel(e) {
+  if (activeMode) {
+    document.body.classList.remove(`panel-open-${activeMode}`);
+    activeMode = null;
+    switchSubtitle(subtitle.dataset.default);
+    resetSnap(e);
+  }
+}
+
 function scheduleDeactivate(e) {
-  if (isViewerOpen) return;
+  if (isViewerOpen || isTouchDevice()) return;
   clearTimeout(leaveTimeout);
   leaveTimeout = setTimeout(() => {
-    if (activeMode) {
-      document.body.classList.remove(`panel-open-${activeMode}`);
-      activeMode = null;
-      switchSubtitle(subtitle.dataset.default);
-      resetSnap(e);
-    }
+    closeCurrentPanel(e);
   }, 90);
 }
 
 triggers.forEach((trig) => {
-  trig.addEventListener('mouseenter', () => activatePanel(trig));
-  trig.addEventListener('mouseleave', (e) => scheduleDeactivate(e));
+  trig.addEventListener('mouseenter', () => {
+    if (!isTouchDevice()) activatePanel(trig);
+  });
+  trig.addEventListener('mouseleave', (e) => {
+    if (!isTouchDevice()) scheduleDeactivate(e);
+  });
+
+  trig.addEventListener('click', (e) => {
+    const targetName = trig.dataset.target;
+    if (activeMode === targetName) {
+      closeCurrentPanel(e);
+    } else {
+      activatePanel(trig);
+    }
+  });
 });
 
 panels.forEach((panel) => {
   panel.addEventListener('mouseenter', () => {
-    if (isViewerOpen) return;
+    if (isViewerOpen || isTouchDevice()) return;
     clearTimeout(leaveTimeout);
     isSnapped = true;
     activeTarget = panel;
     applySnap(panel);
   });
-  panel.addEventListener('mouseleave', (e) => scheduleDeactivate(e));
+  panel.addEventListener('mouseleave', (e) => {
+    if (!isTouchDevice()) scheduleDeactivate(e);
+  });
 });
 
 function openViewer(src) {
@@ -159,12 +181,7 @@ function closeViewer() {
   isViewerOpen = false;
   document.body.classList.remove('viewer-open');
   viewerImg.src = '';
-  if (activeMode) {
-    document.body.classList.remove(`panel-open-${activeMode}`);
-    activeMode = null;
-    switchSubtitle(subtitle.dataset.default);
-  }
-  resetSnap();
+  closeCurrentPanel();
 }
 
 document.addEventListener('click', (e) => {
@@ -174,8 +191,29 @@ document.addEventListener('click', (e) => {
   }
   if (isViewerOpen) {
     closeViewer();
+    return;
+  }
+  if (isTouchDevice() && activeMode) {
+    const isClickInsideTrigger = e.target.closest('.corner-trigger');
+    const isClickInsidePanel = e.target.closest('.corner-panel');
+    if (!isClickInsideTrigger && !isClickInsidePanel) {
+      closeCurrentPanel(e);
+    }
   }
 });
+
+function handleTouchMove(e) {
+  if (isViewerOpen || !e.touches || e.touches.length === 0) return;
+  isSnapped = false;
+  activeTarget = null;
+  targetScaleX = 1.1;
+  targetScaleY = 1.1;
+  targetX = e.touches[0].clientX;
+  targetY = e.touches[0].clientY;
+}
+
+window.addEventListener('touchstart', handleTouchMove, { passive: true });
+window.addEventListener('touchmove', handleTouchMove, { passive: true });
 
 window.addEventListener('keydown', (e) => {
   if (e.key === 'Escape' && isViewerOpen) {
@@ -184,14 +222,14 @@ window.addEventListener('keydown', (e) => {
 });
 
 window.addEventListener('mousemove', (e) => {
-  if (!isSnapped && !isViewerOpen) {
+  if (!isSnapped && !isViewerOpen && !isTouchDevice()) {
     targetX = e.clientX;
     targetY = e.clientY;
   }
 });
 
 window.addEventListener('mouseleave', () => {
-  if (!isSnapped && !isViewerOpen) {
+  if (!isSnapped && !isViewerOpen && !isTouchDevice()) {
     targetX = window.innerWidth / 2;
     targetY = window.innerHeight / 2;
     resetSnap();
