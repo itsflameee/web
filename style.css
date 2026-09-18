@@ -45,6 +45,99 @@ body {
   }
 }
 
+.corner-zone {
+  position: fixed;
+  width: 140px;
+  height: 140px;
+  z-index: 10;
+}
+
+.corner-zone.top-left {
+  top: 0;
+  left: 0;
+}
+
+.corner-panel {
+  position: fixed;
+  z-index: 5;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.corner-panel.top-left {
+  top: 40px;
+  left: 40px;
+  max-width: 320px;
+  transform: translate3d(-15px, -15px, 0);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+body.mode-active .corner-panel.top-left {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate3d(0, 0, 0);
+}
+
+.panel-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+  text-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+}
+
+.panel-image-wrap {
+  width: 100%;
+  min-height: 140px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.fastfetch-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+}
+
+.panel-desc {
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: #999999;
+}
+
+.tech-stack {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.tech-item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #cccccc;
+}
+
+.tech-item svg {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+}
+
 .container {
   position: relative;
   z-index: 2;
@@ -53,6 +146,11 @@ body {
   flex-direction: column;
   align-items: center;
   padding: 0 20px;
+  transition: transform 0.4s ease;
+}
+
+body.mode-active .container {
+  transform: scale(0.85);
 }
 
 .title {
@@ -76,6 +174,12 @@ body {
   font-weight: 500;
   user-select: none;
   cursor: default;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.subtitle.fade-out {
+  opacity: 0;
+  transform: translateY(-4px);
 }
 
 .links {
@@ -83,6 +187,13 @@ body {
   display: flex;
   gap: 16px;
   align-items: center;
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+body.mode-active .links {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(12px);
 }
 
 .icon-btn {

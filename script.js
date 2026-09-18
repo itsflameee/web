@@ -1,4 +1,7 @@
 const glow = document.getElementById('glow');
+const subtitle = document.getElementById('main-subtitle');
+const zoneSetup = document.getElementById('zone-setup');
+const panelSetup = document.getElementById('panel-setup');
 
 const BASE_RADIUS = 200;
 const ease = 0.08;
@@ -44,9 +47,21 @@ function resetSnap(e) {
   }
 }
 
-const targets = document.querySelectorAll('.title, .subtitle, .icon-btn');
+function switchSubtitle(nextText) {
+  if (subtitle.textContent === nextText) return;
+  subtitle.classList.add('fade-out');
+  setTimeout(() => {
+    subtitle.textContent = nextText;
+    subtitle.classList.remove('fade-out');
+    if (isSnapped && activeTarget === subtitle) {
+      applySnap(subtitle);
+    }
+  }, 200);
+}
 
-targets.forEach((el) => {
+const interactiveTargets = document.querySelectorAll('.title, .subtitle, .icon-btn');
+
+interactiveTargets.forEach((el) => {
   el.addEventListener('mouseenter', () => {
     isSnapped = true;
     activeTarget = el;
@@ -56,6 +71,42 @@ targets.forEach((el) => {
   el.addEventListener('mouseleave', (e) => {
     resetSnap(e);
   });
+});
+
+let isInsideZone = false;
+let isInsidePanel = false;
+
+function handleZoneEnter() {
+  document.body.classList.add('mode-active');
+  switchSubtitle(zoneSetup.dataset.subtitle);
+}
+
+function handleZoneLeaveCheck(e) {
+  if (!isInsideZone && !isInsidePanel) {
+    document.body.classList.remove('mode-active');
+    switchSubtitle(subtitle.dataset.default);
+    resetSnap(e);
+  }
+}
+
+zoneSetup.addEventListener('mouseenter', () => {
+  isInsideZone = true;
+  handleZoneEnter();
+});
+
+zoneSetup.addEventListener('mouseleave', (e) => {
+  isInsideZone = false;
+  setTimeout(() => handleZoneLeaveCheck(e), 50);
+});
+
+panelSetup.addEventListener('mouseenter', () => {
+  isInsidePanel = true;
+  handleZoneEnter();
+});
+
+panelSetup.addEventListener('mouseleave', (e) => {
+  isInsidePanel = false;
+  setTimeout(() => handleZoneLeaveCheck(e), 50);
 });
 
 window.addEventListener('mousemove', (e) => {
