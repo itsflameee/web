@@ -20,34 +20,28 @@ body {
   position: absolute;
   top: 0;
   left: 0;
-  width: 500px;
-  height: 500px;
+  width: 400px;
+  height: 400px;
   background: radial-gradient(
     ellipse at center,
-    rgba(255, 255, 255, 0.18) 0%,
-    rgba(255, 255, 255, 0.05) 45%,
+    rgba(255, 255, 255, 0.28) 0%,
+    rgba(255, 255, 255, 0.08) 45%,
     transparent 70%
   );
-  filter: blur(50px);
+  filter: blur(30px);
   border-radius: 50%;
   pointer-events: none;
   z-index: 1;
-  will-change: transform, width, height, border-radius;
-  animation: pulse 4s ease-in-out infinite alternate;
+  will-change: transform;
+  animation: breathe 3.5s ease-in-out infinite alternate;
 }
 
-@keyframes pulse {
+@keyframes breathe {
   0% {
-    opacity: 0.7;
-    filter: blur(48px);
-  }
-  50% {
-    opacity: 1;
-    filter: blur(54px);
+    opacity: 0.65;
   }
   100% {
-    opacity: 0.75;
-    filter: blur(50px);
+    opacity: 1;
   }
 }
 

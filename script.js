@@ -1,20 +1,17 @@
 const glow = document.getElementById('glow');
 
-const DEFAULT_SIZE = 500;
-const ease = 0.065;
+const BASE_RADIUS = 200;
+const ease = 0.08;
 
 let targetX = window.innerWidth / 2;
 let targetY = window.innerHeight / 2;
 let currentX = targetX;
 let currentY = targetY;
 
-let targetW = DEFAULT_SIZE;
-let targetH = DEFAULT_SIZE;
-let currentW = DEFAULT_SIZE;
-let currentH = DEFAULT_SIZE;
-
-let targetRadius = 50;
-let currentRadius = 50;
+let targetScaleX = 1;
+let targetScaleY = 1;
+let currentScaleX = 1;
+let currentScaleY = 1;
 
 let isSnapped = false;
 let activeTarget = null;
@@ -24,23 +21,23 @@ function applySnap(el) {
   targetX = rect.left + rect.width / 2;
   targetY = rect.top + rect.height / 2;
 
-  if (el.classList.contains('title') || el.classList.contains('subtitle')) {
-    targetW = Math.max(rect.width * 1.5, 420);
-    targetH = Math.max(rect.height * 2.8, 220);
-    targetRadius = 35;
+  if (el.classList.contains('title')) {
+    targetScaleX = (rect.width * 1.35) / 400;
+    targetScaleY = 0.55;
+  } else if (el.classList.contains('subtitle')) {
+    targetScaleX = (rect.width * 1.6) / 400;
+    targetScaleY = 0.45;
   } else {
-    targetW = 620;
-    targetH = 620;
-    targetRadius = 50;
+    targetScaleX = 1.7;
+    targetScaleY = 1.7;
   }
 }
 
 function resetSnap(e) {
   isSnapped = false;
   activeTarget = null;
-  targetW = DEFAULT_SIZE;
-  targetH = DEFAULT_SIZE;
-  targetRadius = 50;
+  targetScaleX = 1;
+  targetScaleY = 1;
   if (e) {
     targetX = e.clientX;
     targetY = e.clientY;
@@ -88,17 +85,13 @@ window.addEventListener('resize', () => {
 function animate() {
   currentX += (targetX - currentX) * ease;
   currentY += (targetY - currentY) * ease;
-  currentW += (targetW - currentW) * ease;
-  currentH += (targetH - currentH) * ease;
-  currentRadius += (targetRadius - currentRadius) * ease;
+  currentScaleX += (targetScaleX - currentScaleX) * ease;
+  currentScaleY += (targetScaleY - currentScaleY) * ease;
 
-  const x = currentX - currentW / 2;
-  const y = currentY - currentH / 2;
+  const x = currentX - BASE_RADIUS;
+  const y = currentY - BASE_RADIUS;
 
-  glow.style.width = `${currentW}px`;
-  glow.style.height = `${currentH}px`;
-  glow.style.borderRadius = `${currentRadius}%`;
-  glow.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+  glow.style.transform = `translate3d(${x}px, ${y}px, 0) scale(${currentScaleX}, ${currentScaleY})`;
 
   requestAnimationFrame(animate);
 }
