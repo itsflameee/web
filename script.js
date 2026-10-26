@@ -91,6 +91,40 @@ function switchSubtitle(nextText) {
 
 const interactiveTargets = document.querySelectorAll('.title, .subtitle, .icon-btn');
 
+let isManamaActive = false;
+
+subtitle.addEventListener('mouseenter', (e) => {
+  if (e.ctrlKey && !activeMode) {
+    isManamaActive = true;
+    switchSubtitle('mahama');
+  }
+});
+
+subtitle.addEventListener('mouseleave', () => {
+  if (isManamaActive) {
+    isManamaActive = false;
+    if (!activeMode) {
+      switchSubtitle(subtitle.dataset.default);
+    }
+  }
+});
+
+window.addEventListener('keydown', (e) => {
+  if (e.key === 'Control' && activeTarget === subtitle && !activeMode && !isManamaActive) {
+    isManamaActive = true;
+    switchSubtitle('mahama');
+  }
+});
+
+window.addEventListener('keyup', (e) => {
+  if (e.key === 'Control' && isManamaActive) {
+    isManamaActive = false;
+    if (!activeMode) {
+      switchSubtitle(subtitle.dataset.default);
+    }
+  }
+});
+
 interactiveTargets.forEach((el) => {
   el.addEventListener('mouseenter', () => {
     if (isViewerOpen || isTouchDevice()) return;
